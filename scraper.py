@@ -12,8 +12,10 @@ class CVMDataScraper:
     --------
     >>> scraper = CVMDataScraper()
     >>> scraper.download_informe_diario() #download do informe do dia atual
-    >>> scraper.download_informes_intervalo(datetime(2020, 1, 1), datetime(2020, 3, 1)) #download de informes no intervalo
     >>> scraper.download_informes_retroativos() #download dos informes retroativos
+    >>> #lista das urls de 1 de janeiro de 2020 até 1 de abril de 2020
+    >>> lista_urls_arquivos = scraper.genera_urls_no_intervalo(datetime(2020, 1, 1), datetime(2020, 4, 1))
+    >>> scraper.download_lista_informes(lista_urls_arquivos) #download de informes no intervalo
     """
     def __init__(self):
         self.file_url_prefix = "http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_"
