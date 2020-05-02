@@ -1,7 +1,6 @@
 import glob
 import psycopg2                                               
 import pandas as pd
-from psycopg2.extras import execute_values
 
 class StoreACMData:
     """
@@ -53,7 +52,7 @@ class StoreACMData:
         value_list: list of tuple
             lista das tuplas com os valores dos registros a serem inseridos
         """
-        for value in value_list: #insere elementos um a um, pode ser otimizado posteriormente
+        for value in value_list: #insere elementos um a um, pode ser otimizado posteriormente, ver execute_values do psycopg2.extras
             query = "INSERT INTO {} (CNPJ_FUNDO, DT_COMPTC, VL_TOTAL, VL_QUOTA, VL_PATRIM_LIQ, CAPTC_DIA, RESG_DIA, NR_COTST) VALUES {} ON CONFLICT (CNPJ_FUNDO, DT_COMPTC) DO NOTHING".format(self._table, value)
             try:
                 self.cursor.execute(query)
@@ -175,7 +174,7 @@ class StoreACMData:
         self.connection.close()
         self.cursor.close()
 
-    def recupera_tudo(self):
+    def recupera_registros(self):
         """
         recupera todos os registros da tabela
 
@@ -186,6 +185,18 @@ class StoreACMData:
         self.cursor.execute("""SELECT * from {}""".format(self._table))
         rows = self.cursor.fetchall()
         return rows
+
+    def conta_registros(self):
+        """
+        conta os registros na tabela
+
+        Returns
+        -------
+        count: número de registros
+        """
+        self.cursor.execute("""SELECT COUNT(*) FROM {}""".format(self._table))
+        count = self.cursor.fetchone()
+        return count[0]
 
     def insere_arquivos_do_diretorio(self, path):
         """
