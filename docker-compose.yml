@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  python:
+    build: .
+    container_name: python-cvm
+    environment:
+      - POSTGRES_PASSWORD=cvmpass
+      - POSTGRES_DB=informes
+      - POSTGRES_USER=cvm
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+    command: "python -m http.server"
+
+  postgres:
+    image: postgres:12
+    container_name: postgres-cvm
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=cvmpass
+      - POSTGRES_DB=informes
+      - POSTGRES_USER=cvm
+    ports:
+      - "5432:5432"
